@@ -9,6 +9,12 @@ import pyodbc
 import win32ui
 import win32con
 
+import time
+
+def getTime(s = ''):
+    print(s + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+
+
 #获取字段名称以及字段类型
 def GetColumns(data):
     l=[]
@@ -85,6 +91,7 @@ def impdata(conn,file,count):
         tablename=l[0]
         if l[1].upper() in ["XLSX","XLS"]:
             data = pd.read_excel(file)
+            getTime('finish read excel at ')
         elif l[1].upper() in ["TXT","CSV"]:
             data = opencsv(file)
         else:
@@ -101,7 +108,7 @@ def impdata(conn,file,count):
     columns=GetColumns(data)
     if createtable(conn, tablename, columns)==False:
         return False
-    
+    getTime('finish create table at ')
     cur = conn.cursor()
     result=True
     try:
@@ -114,10 +121,12 @@ def impdata(conn,file,count):
                 sql='insert into [{}]({})values({})'.format(tablename,columns,values)
             else:
                 sql += ', \n({})'.format(values)
+            # getTime('finish sql format at ')
             if (c+1)%count==0 or row==(len(data)-1):
                 cur.execute(sql)
                 conn.commit()
             c +=1
+            # getTime('finish sql execute at ')
     except:
         result = False
         print(sql)
@@ -150,23 +159,23 @@ def impdata(conn,file,count):
         cur.close()
        
         
-    
+    getTime('finished at ')
     
     return result
 
 
 if __name__=="__main__":
+    getTime('start at ')
     openFlags = win32con.OFN_ALLOWMULTISELECT
     fspec = "Type (*.xlsx, *.xls)|*.xlsx;*.xls|Type (*.csv)|*.csv|All Files (*.*)|*.*||"
     dlg = win32ui.CreateFileDialog(1, None, None, openFlags, fspec)
     conn = pyodbc.connect("DRIVER={SQL Server};Server=localhost;Port=1433;database=test;UserName=sa;password=123456")
-
     if dlg.DoModal() == win32con.IDOK:
         fileList=dlg.GetPathNames()
 
         for i in fileList:
             
-            if impdata(conn,i,1000):
+            if impdata(conn,i,100):
                 
                 print(i,"导入成功!")
             else:

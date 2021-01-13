@@ -25,7 +25,7 @@ def formRdStr(ab, maxLen = 20):
         s += ab[rd.randint(0, len(ab) - 1)]
     return s
 
-for i in range(2, 1001):
+for i in range(2, 1000002):
     sheet['A' + str(i)] = formRdStr(a)
     sheet['B' + str(i)] = formRdStr(b)
     sheet['C' + str(i)] = rd.randint(1, 1000000)
@@ -33,7 +33,7 @@ for i in range(2, 1001):
     sheet['E' + str(i)] = rd.randint(1, 1000000000000) / 100
     sheet['F' + str(i)] = float(formRdStr(num, 10) + '.' + formRdStr(num))
 
-workbook.save('test.xlsx')
+workbook.save('test3.xlsx')
 
 
 
