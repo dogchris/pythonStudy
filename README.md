@@ -13,3 +13,5 @@
 ## pyecharts pyecharts库使用范例
 1. 10月的期待.py 一个简单的pyecharts地图数据实例
 
+## pillow pillow库使用范例
+1. 图片转字符画.py 将图片转换成字符画的实例代码
